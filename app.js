@@ -94,6 +94,7 @@ async function init() {
   await openDB();
   registerServiceWorker();
   bindEvents();
+  await loadJournalsFromDB();
 }
 
 function bindEvents() {
@@ -186,6 +187,7 @@ async function handleCreateJournal() {
   await addJournal(journal);
   await saveConfluenceTemplate(journal.id, defaultTemplate.map((item) => ({ id: crypto.randomUUID(), label: item })));
   dom.newJournalName.value = '';
+  await loadJournalsFromDB();
 
   await loadJournalsFromDB();
 
@@ -215,11 +217,13 @@ async function openJournal(id) {
   renderInstrumentValues();
 }
 
+async function showJournalSelector() {
 function showJournalSelector() {
   dom.journalSelector.classList.add('active');
   dom.journalApp.classList.remove('active');
   dom.backToJournals.classList.add('hidden');
   state.currentJournal = null;
+  await loadJournalsFromDB();
 
   loadJournalsFromDB();
 
@@ -690,6 +694,7 @@ async function renameJournal() {
   if (!name) return;
   state.currentJournal.name = name;
   await updateJournal(state.currentJournal);
+  loadJournalsFromDB();
 
   loadJournalsFromDB();
 
@@ -868,6 +873,7 @@ async function importJournalJson(event) {
     await loadTemplate();
   }
   event.target.value = '';
+  await loadJournalsFromDB();
 
   await loadJournalsFromDB();
 
