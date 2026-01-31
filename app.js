@@ -36,6 +36,8 @@ const dom = {
   journalSelector: document.getElementById('journalSelector'),
   journalList: document.getElementById('journalList'),
   journalEmptyState: document.getElementById('journalEmptyState'),
+
+
   newJournalName: document.getElementById('newJournalName'),
   createJournalBtn: document.getElementById('createJournalBtn'),
   backToJournals: document.getElementById('backToJournals'),
@@ -137,6 +139,7 @@ function bindEvents() {
   dom.tradeForm.querySelector('[name="instrument"]').addEventListener('input', updateRiskGuidance);
 }
 
+
 async function loadJournalsFromDB() {
   const journals = await getAllJournals();
   renderJournals(journals);
@@ -147,6 +150,15 @@ function renderJournals(journals) {
   dom.journalList.innerHTML = '';
   dom.journalEmptyState.classList.toggle('hidden', journals.length > 0);
   if (!journals.length) return;
+
+async function renderJournalList() {
+  const journals = await getAllJournals();
+  dom.journalList.innerHTML = '';
+  if (!journals.length) {
+    dom.journalList.innerHTML = '<p class="muted">No journals yet. Create your first journal.</p>';
+    return;
+  }
+
   journals.forEach((journal) => {
     const card = document.createElement('div');
     card.className = 'journal-card';
@@ -176,6 +188,11 @@ async function handleCreateJournal() {
   await saveConfluenceTemplate(journal.id, defaultTemplate.map((item) => ({ id: crypto.randomUUID(), label: item })));
   dom.newJournalName.value = '';
   await loadJournalsFromDB();
+
+  await loadJournalsFromDB();
+
+  await renderJournalList();
+
 }
 
 async function openJournal(id) {
@@ -201,11 +218,17 @@ async function openJournal(id) {
 }
 
 async function showJournalSelector() {
+function showJournalSelector() {
   dom.journalSelector.classList.add('active');
   dom.journalApp.classList.remove('active');
   dom.backToJournals.classList.add('hidden');
   state.currentJournal = null;
   await loadJournalsFromDB();
+
+  loadJournalsFromDB();
+
+  renderJournalList();
+
 }
 
 function switchTab(tabId) {
@@ -672,6 +695,11 @@ async function renameJournal() {
   state.currentJournal.name = name;
   await updateJournal(state.currentJournal);
   loadJournalsFromDB();
+
+  loadJournalsFromDB();
+
+  renderJournalList();
+
 }
 
 async function handleDeleteJournal() {
@@ -846,6 +874,11 @@ async function importJournalJson(event) {
   }
   event.target.value = '';
   await loadJournalsFromDB();
+
+  await loadJournalsFromDB();
+
+  await renderJournalList();
+
 }
 
 function downloadFile(content, filename, type) {
