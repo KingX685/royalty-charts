@@ -4,11 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Royalty Charts</title>
+
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#1aa3ff" />
+
+  <!-- Icons are optional; app works without them -->
   <link rel="icon" href="icons/icon-192.svg" />
+
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <div id="app" class="app">
     <header class="topbar">
@@ -26,19 +31,35 @@
     </header>
 
     <main>
+      <!-- JOURNAL SELECTOR -->
       <section id="journalSelector" class="screen active">
         <div class="card">
           <h2>Journals</h2>
-          <p class="muted">Create separate journals for each account. Data stays on this device.</p>
-          <p id="journalEmptyState" class="muted">No journals yet. Create your first journal.</p>
-          <div class="journal-list" id="journalList"></div>
+          <p class="muted">
+            Create separate journals for each account. Data stays on this device.
+          </p>
+
+          <!-- ONE empty state only -->
+          <p id="journalEmptyState" class="muted">
+            No journals yet. Create your first journal.
+          </p>
+
+          <div id="journalList" class="journal-list"></div>
+
           <div class="journal-actions">
-            <input id="newJournalName" type="text" placeholder="Journal name" />
-            <button id="createJournalBtn" class="btn btn-primary">Create Journal</button>
+            <input
+              id="newJournalName"
+              type="text"
+              placeholder="Journal name"
+            />
+            <button id="createJournalBtn" class="btn btn-primary">
+              Create Journal
+            </button>
           </div>
         </div>
       </section>
 
+      <!-- JOURNAL APP -->
       <section id="journalApp" class="screen">
         <nav class="tabs">
           <button data-tab="calendar" class="tab active">Calendar</button>
@@ -48,27 +69,29 @@
           <button data-tab="settings" class="tab">Settings</button>
         </nav>
 
+        <!-- CALENDAR -->
         <section id="calendar" class="tab-panel active">
           <div class="calendar-header">
             <button id="prevMonth" class="btn btn-outline">◀</button>
             <div>
-              <h2 id="calendarLabel">Month 2024</h2>
+              <h2 id="calendarLabel"></h2>
               <p class="muted">Tap a day for details</p>
             </div>
             <button id="nextMonth" class="btn btn-outline">▶</button>
           </div>
-          <div class="calendar-grid" id="calendarGrid"></div>
+
+          <div id="calendarGrid" class="calendar-grid"></div>
           <div id="dayDetail" class="card hidden"></div>
         </section>
 
+        <!-- ADD TRADE -->
         <section id="add" class="tab-panel">
           <form id="tradeForm" class="card form">
             <h2>Add Trade</h2>
+
             <div class="form-grid">
-              <label>
-                Instrument
-                <input name="instrument" type="text" placeholder="EURUSD" />
-              </label>
+              <label>Instrument <input name="instrument" type="text" /></label>
+
               <label>
                 Market Type
                 <select name="marketType">
@@ -76,6 +99,7 @@
                   <option value="Synthetic">Synthetic</option>
                 </select>
               </label>
+
               <label>
                 Direction
                 <select name="direction">
@@ -83,12 +107,9 @@
                   <option value="Sell">Sell</option>
                 </select>
               </label>
-              <label>
-                Date/Time
-                <input name="dateTime" type="datetime-local" />
-              </label>
-              <label>
-                Session
+
+              <label>Date/Time <input name="dateTime" type="datetime-local" /></label>
+              <label>Session
                 <select name="session">
                   <option value="Asia">Asia</option>
                   <option value="London">London</option>
@@ -96,75 +117,36 @@
                   <option value="Custom">Custom</option>
                 </select>
               </label>
-              <label>
-                Entry Price
-                <input name="entryPrice" type="number" step="0.0001" />
-              </label>
-              <label>
-                Stop-loss Price
-                <input name="stopLoss" type="number" step="0.0001" />
-              </label>
-              <label>
-                Take-profit Price
-                <input name="takeProfit" type="number" step="0.0001" />
-              </label>
-              <label>
-                Exit Price
-                <input name="exitPrice" type="number" step="0.0001" />
-              </label>
-              <label>
-                Lot Size
-                <input name="lotSize" type="number" step="0.01" />
-              </label>
-              <label>
-                Account Balance
-                <input name="balance" type="number" step="0.01" />
-              </label>
-              <label>
-                Risk %
-                <input name="riskPercent" type="number" step="0.01" />
-              </label>
-              <label>
-                Risk Amount (auto)
-                <input name="riskAmount" type="number" step="0.01" readonly />
-              </label>
-              <label>
-                P/L ($)
-                <input name="plUsd" type="number" step="0.01" />
-              </label>
-              <label>
-                P/L (₦)
-                <input name="plNgn" type="number" step="0.01" />
-              </label>
-              <label>
-                Pips
-                <input name="pips" type="number" step="0.1" />
-              </label>
-              <label>
-                Tags (comma separated)
-                <input name="tags" type="text" placeholder="Breakout, NY open" />
-              </label>
-              <label>
-                Status
+
+              <label>Entry <input name="entryPrice" type="number" step="0.0001" /></label>
+              <label>Stop Loss <input name="stopLoss" type="number" step="0.0001" /></label>
+              <label>Take Profit <input name="takeProfit" type="number" step="0.0001" /></label>
+              <label>Exit <input name="exitPrice" type="number" step="0.0001" /></label>
+              <label>Lot Size <input name="lotSize" type="number" step="0.01" /></label>
+
+              <label>Balance <input name="balance" type="number" /></label>
+              <label>Risk % <input name="riskPercent" type="number" /></label>
+              <label>Risk Amount <input name="riskAmount" type="number" readonly /></label>
+
+              <label>P/L ($) <input name="plUsd" type="number" /></label>
+              <label>P/L (₦) <input name="plNgn" type="number" /></label>
+              <label>Pips <input name="pips" type="number" /></label>
+
+              <label>Status
                 <select name="status">
                   <option value="Open">Open</option>
                   <option value="Closed">Closed</option>
                 </select>
               </label>
-              <label>
-                Close Date/Time
-                <input name="closeDateTime" type="datetime-local" />
-              </label>
+
+              <label>Close Date/Time <input name="closeDateTime" type="datetime-local" /></label>
             </div>
-            <label>
-              Notes
-              <textarea name="notes" rows="4"></textarea>
-            </label>
+
+            <label>Notes <textarea name="notes"></textarea></label>
 
             <div class="card subtle">
               <h3>Confluence Checklist</h3>
-              <div id="confluenceChecklist" class="checklist"></div>
-              <p class="muted">Score is saved with the trade.</p>
+              <div id="confluenceChecklist"></div>
             </div>
 
             <div class="card subtle">
@@ -175,7 +157,7 @@
 
             <div class="card subtle">
               <h3>Risk Guidance</h3>
-              <p id="riskGuidance" class="muted">Provide balance, risk %, entry, and stop-loss to calculate risk.</p>
+              <p id="riskGuidance" class="muted"></p>
             </div>
 
             <div class="form-actions">
@@ -185,95 +167,66 @@
           </form>
         </section>
 
+        <!-- TRADES -->
         <section id="trades" class="tab-panel">
           <div class="card">
-            <div class="trades-header">
-              <h2>Trades</h2>
-              <div class="trades-controls">
-                <input id="tradeSearch" type="search" placeholder="Search" />
-                <select id="tradeSort">
-                  <option value="dateDesc">Date (newest)</option>
-                  <option value="dateAsc">Date (oldest)</option>
-                  <option value="plDesc">P/L (high)</option>
-                  <option value="plAsc">P/L (low)</option>
-                </select>
-              </div>
+            <h2>Trades</h2>
+            <div class="trades-controls">
+              <input id="tradeSearch" type="search" placeholder="Search" />
+              <select id="tradeSort"></select>
             </div>
-            <div id="tradeList" class="trade-list"></div>
+            <div id="tradeList"></div>
           </div>
         </section>
 
+        <!-- ANALYTICS -->
         <section id="analytics" class="tab-panel">
           <div class="card">
             <h2>Analytics</h2>
-            <div class="filters">
-              <input id="filterStart" type="date" />
-              <input id="filterEnd" type="date" />
-              <input id="filterInstrument" type="text" placeholder="Instrument" />
-              <select id="filterDirection">
-                <option value="">Direction</option>
-                <option value="Buy">Buy</option>
-                <option value="Sell">Sell</option>
-              </select>
-              <select id="filterMarket">
-                <option value="">Market</option>
-                <option value="Forex">Forex</option>
-                <option value="Synthetic">Synthetic</option>
-              </select>
-              <input id="filterTag" type="text" placeholder="Tag" />
-              <input id="filterConfluenceMin" type="number" placeholder="Confluence min" />
-              <input id="filterConfluenceMax" type="number" placeholder="Confluence max" />
-              <button id="applyFilters" class="btn btn-outline">Apply</button>
-            </div>
-            <div class="stats-grid" id="analyticsStats"></div>
-            <div class="chart-grid">
-              <canvas id="equityChart" height="160"></canvas>
-              <canvas id="dailyChart" height="160"></canvas>
-            </div>
-            <div id="confluenceStats" class="card subtle"></div>
+            <div id="analyticsStats" class="stats-grid"></div>
+            <canvas id="equityChart"></canvas>
+            <canvas id="dailyChart"></canvas>
+            <div id="confluenceStats"></div>
           </div>
         </section>
 
+        <!-- SETTINGS -->
         <section id="settings" class="tab-panel">
           <div class="card">
             <h2>Journal Settings</h2>
-            <div class="form-grid">
-              <label>
-                Journal Name
-                <input id="journalNameInput" type="text" />
-              </label>
-              <button id="renameJournal" class="btn btn-outline">Rename</button>
-              <button id="deleteJournal" class="btn btn-danger">Delete Journal</button>
-            </div>
+
+            <label>
+              Journal Name
+              <input id="journalNameInput" type="text" />
+            </label>
+
+            <button id="renameJournal" class="btn btn-outline">Rename</button>
+            <button id="deleteJournal" class="btn btn-danger">Delete Journal</button>
+
             <div class="card subtle">
               <h3>Confluence Template</h3>
               <div id="templateEditor"></div>
-              <div class="template-actions">
-                <input id="newTemplateItem" type="text" placeholder="New checklist item" />
-                <button id="addTemplateItem" class="btn btn-primary">Add Item</button>
-              </div>
+              <input id="newTemplateItem" type="text" />
+              <button id="addTemplateItem" class="btn btn-primary">Add</button>
             </div>
+
             <div class="card subtle">
               <h3>Instrument Values</h3>
-              <p class="muted">Add pip value per lot (Forex) or value per point (Synthetic) for sizing guidance.</p>
               <div id="instrumentValues"></div>
-              <div class="template-actions">
-                <input id="instrumentName" type="text" placeholder="Instrument" />
-                <input id="instrumentValue" type="number" step="0.01" placeholder="Value" />
-                <select id="instrumentType">
-                  <option value="Forex">Forex (pip value/lot)</option>
-                  <option value="Synthetic">Synthetic (value/point)</option>
-                </select>
-                <button id="addInstrumentValue" class="btn btn-primary">Save Value</button>
-              </div>
+              <input id="instrumentName" type="text" />
+              <input id="instrumentValue" type="number" />
+              <select id="instrumentType">
+                <option value="Forex">Forex</option>
+                <option value="Synthetic">Synthetic</option>
+              </select>
+              <button id="addInstrumentValue" class="btn btn-primary">Save</button>
             </div>
+
             <div class="card subtle">
               <h3>Import / Export</h3>
-              <div class="import-export">
-                <button id="exportJson" class="btn btn-outline">Export JSON</button>
-                <button id="exportCsv" class="btn btn-outline">Export CSV</button>
-                <input id="importJson" type="file" accept="application/json" />
-              </div>
+              <button id="exportJson">Export JSON</button>
+              <button id="exportCsv">Export CSV</button>
+              <input id="importJson" type="file" />
             </div>
           </div>
         </section>
