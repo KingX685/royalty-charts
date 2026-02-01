@@ -1,3 +1,4 @@
+```js
 import {
   openDB,
   getAllJournals,
@@ -37,31 +38,36 @@ const dom = {
   journalList: document.getElementById('journalList'),
   journalEmptyState: document.getElementById('journalEmptyState'),
 
-
   newJournalName: document.getElementById('newJournalName'),
   createJournalBtn: document.getElementById('createJournalBtn'),
   backToJournals: document.getElementById('backToJournals'),
   journalApp: document.getElementById('journalApp'),
+
   tabs: document.querySelectorAll('.tab'),
   tabPanels: document.querySelectorAll('.tab-panel'),
+
   calendarLabel: document.getElementById('calendarLabel'),
   calendarGrid: document.getElementById('calendarGrid'),
   dayDetail: document.getElementById('dayDetail'),
   prevMonth: document.getElementById('prevMonth'),
   nextMonth: document.getElementById('nextMonth'),
+
   tradeForm: document.getElementById('tradeForm'),
   confluenceChecklist: document.getElementById('confluenceChecklist'),
   screenshotInput: document.getElementById('screenshotInput'),
   screenshotPreview: document.getElementById('screenshotPreview'),
   riskGuidance: document.getElementById('riskGuidance'),
   resetTradeForm: document.getElementById('resetTradeForm'),
+
   tradeList: document.getElementById('tradeList'),
   tradeSearch: document.getElementById('tradeSearch'),
   tradeSort: document.getElementById('tradeSort'),
+
   analyticsStats: document.getElementById('analyticsStats'),
   confluenceStats: document.getElementById('confluenceStats'),
   equityChart: document.getElementById('equityChart'),
   dailyChart: document.getElementById('dailyChart'),
+
   filterStart: document.getElementById('filterStart'),
   filterEnd: document.getElementById('filterEnd'),
   filterInstrument: document.getElementById('filterInstrument'),
@@ -71,20 +77,25 @@ const dom = {
   filterConfluenceMin: document.getElementById('filterConfluenceMin'),
   filterConfluenceMax: document.getElementById('filterConfluenceMax'),
   applyFilters: document.getElementById('applyFilters'),
+
   journalNameInput: document.getElementById('journalNameInput'),
   renameJournal: document.getElementById('renameJournal'),
   deleteJournal: document.getElementById('deleteJournal'),
+
   templateEditor: document.getElementById('templateEditor'),
   newTemplateItem: document.getElementById('newTemplateItem'),
   addTemplateItem: document.getElementById('addTemplateItem'),
+
   instrumentValues: document.getElementById('instrumentValues'),
   instrumentName: document.getElementById('instrumentName'),
   instrumentValue: document.getElementById('instrumentValue'),
   instrumentType: document.getElementById('instrumentType'),
   addInstrumentValue: document.getElementById('addInstrumentValue'),
+
   exportJson: document.getElementById('exportJson'),
   exportCsv: document.getElementById('exportCsv'),
   importJson: document.getElementById('importJson'),
+
   installBtn: document.getElementById('installBtn'),
 };
 
@@ -94,36 +105,36 @@ async function init() {
   await openDB();
   registerServiceWorker();
   bindEvents();
-  await loadJournalsFromDB();
+  await renderJournalList();
 }
 
 function bindEvents() {
-  dom.createJournalBtn.addEventListener('click', handleCreateJournal);
-  dom.backToJournals.addEventListener('click', () => showJournalSelector());
-  dom.tabs.forEach((tab) => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
-  dom.prevMonth.addEventListener('click', () => changeMonth(-1));
-  dom.nextMonth.addEventListener('click', () => changeMonth(1));
-  dom.tradeForm.addEventListener('submit', handleTradeSubmit);
-  dom.resetTradeForm.addEventListener('click', resetTradeForm);
-  dom.screenshotInput.addEventListener('change', handleScreenshots);
-  dom.tradeSearch.addEventListener('input', renderTradesList);
-  dom.tradeSort.addEventListener('change', renderTradesList);
-  dom.applyFilters.addEventListener('click', renderAnalytics);
-  dom.renameJournal.addEventListener('click', renameJournal);
-  dom.deleteJournal.addEventListener('click', handleDeleteJournal);
-  dom.addTemplateItem.addEventListener('click', handleAddTemplateItem);
-  dom.addInstrumentValue.addEventListener('click', handleAddInstrumentValue);
-  dom.exportJson.addEventListener('click', exportJournalJson);
-  dom.exportCsv.addEventListener('click', exportJournalCsv);
-  dom.importJson.addEventListener('change', importJournalJson);
+  dom.createJournalBtn?.addEventListener('click', handleCreateJournal);
+  dom.backToJournals?.addEventListener('click', () => showJournalSelector());
+  dom.tabs?.forEach((tab) => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
+  dom.prevMonth?.addEventListener('click', () => changeMonth(-1));
+  dom.nextMonth?.addEventListener('click', () => changeMonth(1));
+  dom.tradeForm?.addEventListener('submit', handleTradeSubmit);
+  dom.resetTradeForm?.addEventListener('click', resetTradeForm);
+  dom.screenshotInput?.addEventListener('change', handleScreenshots);
+  dom.tradeSearch?.addEventListener('input', renderTradesList);
+  dom.tradeSort?.addEventListener('change', renderTradesList);
+  dom.applyFilters?.addEventListener('click', renderAnalytics);
+  dom.renameJournal?.addEventListener('click', renameJournal);
+  dom.deleteJournal?.addEventListener('click', handleDeleteJournal);
+  dom.addTemplateItem?.addEventListener('click', handleAddTemplateItem);
+  dom.addInstrumentValue?.addEventListener('click', handleAddInstrumentValue);
+  dom.exportJson?.addEventListener('click', exportJournalJson);
+  dom.exportCsv?.addEventListener('click', exportJournalCsv);
+  dom.importJson?.addEventListener('change', importJournalJson);
 
   window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
     deferredPrompt = event;
-    dom.installBtn.classList.remove('hidden');
+    dom.installBtn?.classList.remove('hidden');
   });
 
-  dom.installBtn.addEventListener('click', async () => {
+  dom.installBtn?.addEventListener('click', async () => {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     await deferredPrompt.userChoice;
@@ -131,52 +142,40 @@ function bindEvents() {
     dom.installBtn.classList.add('hidden');
   });
 
-  dom.tradeForm.querySelector('[name="balance"]').addEventListener('input', updateRiskAmount);
-  dom.tradeForm.querySelector('[name="riskPercent"]').addEventListener('input', updateRiskAmount);
-  dom.tradeForm.querySelector('[name="entryPrice"]').addEventListener('input', updateRiskGuidance);
-  dom.tradeForm.querySelector('[name="stopLoss"]').addEventListener('input', updateRiskGuidance);
-  dom.tradeForm.querySelector('[name="marketType"]').addEventListener('change', updateRiskGuidance);
-  dom.tradeForm.querySelector('[name="instrument"]').addEventListener('input', updateRiskGuidance);
+  const bal = dom.tradeForm?.querySelector('[name="balance"]');
+  const rp = dom.tradeForm?.querySelector('[name="riskPercent"]');
+  const en = dom.tradeForm?.querySelector('[name="entryPrice"]');
+  const sl = dom.tradeForm?.querySelector('[name="stopLoss"]');
+  const mt = dom.tradeForm?.querySelector('[name="marketType"]');
+  const ins = dom.tradeForm?.querySelector('[name="instrument"]');
+
+  bal?.addEventListener('input', updateRiskAmount);
+  rp?.addEventListener('input', updateRiskAmount);
+  en?.addEventListener('input', updateRiskGuidance);
+  sl?.addEventListener('input', updateRiskGuidance);
+  mt?.addEventListener('change', updateRiskGuidance);
+  ins?.addEventListener('input', updateRiskGuidance);
 }
-
-
-async function loadJournalsFromDB() {
-  const journals = await getAllJournals();
-  renderJournals(journals);
-}
-
-function renderJournals(journals) {
-  console.log('renderJournals count', journals.length);
-  dom.journalList.innerHTML = '';
-  dom.journalEmptyState.classList.toggle('hidden', journals.length > 0);
-  if (!journals.length) return;
 
 async function renderJournalList() {
   const journals = await getAllJournals();
   dom.journalList.innerHTML = '';
-  if (!journals.length) {
-    dom.journalList.innerHTML = '<p class="muted">No journals yet. Create your first journal.</p>';
-    return;
-  }
+  dom.journalEmptyState.style.display = journals.length ? 'none' : 'block';
 
   journals.forEach((journal) => {
-    const card = document.createElement('div');
-    card.className = 'journal-card';
-    card.innerHTML = `
-      <div>
-        <h3>${journal.name}</h3>
-        <p class="muted">Trades: ${journal.tradeCount || 0}</p>
-      </div>
-      <button class="btn btn-primary">Open</button>
-    `;
-    card.querySelector('button').addEventListener('click', () => openJournal(journal.id));
-    dom.journalList.appendChild(card);
+    const button = document.createElement('button');
+    button.className = 'journal-card';
+    button.type = 'button';
+    button.textContent = journal.name;
+    button.addEventListener('click', () => openJournal(journal.id));
+    dom.journalList.appendChild(button);
   });
 }
 
 async function handleCreateJournal() {
   const name = dom.newJournalName.value.trim();
   if (!name) return;
+
   const journal = {
     id: crypto.randomUUID(),
     name,
@@ -184,29 +183,32 @@ async function handleCreateJournal() {
     tradeCount: 0,
     instrumentValues: [],
   };
+
   await addJournal(journal);
-  await saveConfluenceTemplate(journal.id, defaultTemplate.map((item) => ({ id: crypto.randomUUID(), label: item })));
+  await saveConfluenceTemplate(
+    journal.id,
+    defaultTemplate.map((item) => ({ id: crypto.randomUUID(), label: item }))
+  );
+
   dom.newJournalName.value = '';
-  await loadJournalsFromDB();
-
-  await loadJournalsFromDB();
-
   await renderJournalList();
-
 }
 
 async function openJournal(id) {
   const journals = await getAllJournals();
   const journal = journals.find((j) => j.id === id);
   if (!journal) return;
+
   state.currentJournal = journal;
   dom.journalNameInput.value = journal.name;
   dom.backToJournals.classList.remove('hidden');
   dom.journalSelector.classList.remove('active');
   dom.journalApp.classList.add('active');
+
   state.trades = await getTradesByJournal(journal.id);
   state.currentJournal.tradeCount = state.trades.length;
   await updateJournal(state.currentJournal);
+
   await loadTemplate();
   updateJournalStats();
   resetTradeForm();
@@ -218,17 +220,11 @@ async function openJournal(id) {
 }
 
 async function showJournalSelector() {
-function showJournalSelector() {
   dom.journalSelector.classList.add('active');
   dom.journalApp.classList.remove('active');
   dom.backToJournals.classList.add('hidden');
   state.currentJournal = null;
-  await loadJournalsFromDB();
-
-  loadJournalsFromDB();
-
-  renderJournalList();
-
+  await renderJournalList();
 }
 
 function switchTab(tabId) {
@@ -250,13 +246,16 @@ function renderCalendar() {
   dom.calendarLabel.textContent = monthLabel;
   dom.calendarGrid.innerHTML = '';
   dom.dayDetail.classList.add('hidden');
+
   const dailyTotals = getDailyTotals();
+
   ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach((label) => {
     const header = document.createElement('div');
     header.className = 'calendar-cell calendar-header-cell';
     header.textContent = label;
     dom.calendarGrid.appendChild(header);
   });
+
   const matrix = getMonthMatrix(year, month);
   matrix.forEach((week) => {
     week.forEach((date) => {
@@ -267,10 +266,12 @@ function renderCalendar() {
         dom.calendarGrid.appendChild(cell);
         return;
       }
+
       const key = formatDateKey(date);
       const dayData = dailyTotals[key] || { pl: 0, count: 0 };
       if (dayData.pl > 0) cell.classList.add('profit');
       if (dayData.pl < 0) cell.classList.add('loss');
+
       cell.innerHTML = `
         <div class="day-number">${date.getDate()}</div>
         <div class="day-metrics">
@@ -291,6 +292,7 @@ function renderDayDetail(dateKey) {
     return key === dateKey;
   });
   const total = trades.reduce((sum, trade) => sum + Number(trade.plUsd || 0), 0);
+
   dom.dayDetail.classList.remove('hidden');
   dom.dayDetail.innerHTML = `
     <h3>Day Detail - ${dateKey}</h3>
@@ -345,27 +347,42 @@ function updateRiskGuidance() {
   const stop = Number(dom.tradeForm.stopLoss.value);
   const marketType = dom.tradeForm.marketType.value;
   const instrument = dom.tradeForm.instrument.value.trim();
+
   if (!balance || !riskPercent || !entry || !stop) {
     dom.riskGuidance.textContent = 'Provide balance, risk %, entry, and stop-loss to calculate risk.';
     return;
   }
+
   const riskAmount = balance * (riskPercent / 100);
   const stopDistance = Math.abs(entry - stop);
+
   if (!instrument) {
-    dom.riskGuidance.textContent = `Risk amount: ${riskAmount.toFixed(2)}. Stop distance: ${stopDistance.toFixed(2)}. Add instrument for sizing guidance.`;
+    dom.riskGuidance.textContent = `Risk amount: ${riskAmount.toFixed(2)}. Stop distance: ${stopDistance.toFixed(
+      2
+    )}. Add instrument for sizing guidance.`;
     return;
   }
-  const valueEntry = state.currentJournal.instrumentValues.find((item) => item.instrument === instrument && item.type === marketType);
+
+  const valueEntry = state.currentJournal.instrumentValues.find(
+    (item) => item.instrument === instrument && item.type === marketType
+  );
+
   if (!valueEntry) {
-    dom.riskGuidance.textContent = `Risk amount: ${riskAmount.toFixed(2)}. Stop distance: ${stopDistance.toFixed(2)}. Insufficient data to verify position size.`;
+    dom.riskGuidance.textContent = `Risk amount: ${riskAmount.toFixed(
+      2
+    )}. Stop distance: ${stopDistance.toFixed(2)}. Insufficient data to verify position size.`;
     return;
   }
+
   if (!stopDistance) {
     dom.riskGuidance.textContent = 'Stop distance is zero. Adjust entry and stop-loss.';
     return;
   }
+
   const positionSize = riskAmount / (stopDistance * valueEntry.value);
-  dom.riskGuidance.textContent = `Estimated position size: ${positionSize.toFixed(2)} lots based on your saved value.`;
+  dom.riskGuidance.textContent = `Estimated position size: ${positionSize.toFixed(
+    2
+  )} lots based on your saved value.`;
 }
 
 async function handleScreenshots(event) {
@@ -411,27 +428,36 @@ function resizeImage(file) {
 async function handleTradeSubmit(event) {
   event.preventDefault();
   if (!state.currentJournal) return;
+
   highlightRecommendedFields();
+
   const data = new FormData(dom.tradeForm);
   const trade = Object.fromEntries(data.entries());
+
   const dateTime = trade.dateTime ? new Date(trade.dateTime) : new Date();
   trade.date = formatDateKey(dateTime);
   trade.dateTime = dateTime.toISOString();
+
   trade.closeDate = trade.closeDateTime ? formatDateKey(new Date(trade.closeDateTime)) : null;
   trade.closeDateTime = trade.closeDateTime ? new Date(trade.closeDateTime).toISOString() : null;
+
   trade.plUsd = Number(trade.plUsd || 0);
   trade.plNgn = Number(trade.plNgn || 0);
+
   trade.riskAmount = trade.riskAmount ? Number(trade.riskAmount) : null;
   trade.balance = trade.balance ? Number(trade.balance) : null;
   trade.riskPercent = trade.riskPercent ? Number(trade.riskPercent) : null;
+
   trade.entryPrice = trade.entryPrice ? Number(trade.entryPrice) : null;
   trade.stopLoss = trade.stopLoss ? Number(trade.stopLoss) : null;
   trade.takeProfit = trade.takeProfit ? Number(trade.takeProfit) : null;
   trade.exitPrice = trade.exitPrice ? Number(trade.exitPrice) : null;
   trade.lotSize = trade.lotSize ? Number(trade.lotSize) : null;
   trade.pips = trade.pips ? Number(trade.pips) : null;
+
   trade.tags = trade.tags ? trade.tags.split(',').map((tag) => tag.trim()).filter(Boolean) : [];
   trade.journalId = state.currentJournal.id;
+
   trade.screenshots = state.screenshotBuffers.map((blob) => ({
     id: crypto.randomUUID(),
     blob,
@@ -440,9 +466,7 @@ async function handleTradeSubmit(event) {
 
   const checked = Array.from(dom.confluenceChecklist.querySelectorAll('input:checked')).map((input) => input.value);
   trade.confluenceChecked = checked;
-  trade.confluenceScore = state.template.length
-    ? Math.round((checked.length / state.template.length) * 100)
-    : 0;
+  trade.confluenceScore = state.template.length ? Math.round((checked.length / state.template.length) * 100) : 0;
 
   if (state.editingTradeId) {
     trade.id = state.editingTradeId;
@@ -479,7 +503,7 @@ function resetTradeForm() {
 function highlightRecommendedFields() {
   const recommended = ['instrument', 'entryPrice', 'stopLoss', 'plUsd', 'dateTime'];
   recommended.forEach((name) => {
-    const field = dom.tradeForm.querySelector(`[name=\"${name}\"]`);
+    const field = dom.tradeForm.querySelector(`[name="${name}"]`);
     if (!field) return;
     const hasValue = field.value && field.value.toString().trim() !== '';
     field.classList.toggle('missing', !hasValue);
@@ -506,6 +530,7 @@ function getDailyTotals() {
 function renderTradesList() {
   const search = dom.tradeSearch.value.toLowerCase();
   const sort = dom.tradeSort.value;
+
   let trades = [...state.trades];
   if (search) {
     trades = trades.filter((trade) => {
@@ -513,12 +538,14 @@ function renderTradesList() {
       return content.includes(search);
     });
   }
+
   trades.sort((a, b) => {
     if (sort === 'dateAsc') return new Date(a.dateTime) - new Date(b.dateTime);
     if (sort === 'plDesc') return Number(b.plUsd) - Number(a.plUsd);
     if (sort === 'plAsc') return Number(a.plUsd) - Number(b.plUsd);
     return new Date(b.dateTime) - new Date(a.dateTime);
   });
+
   dom.tradeList.innerHTML = trades.length ? trades.map(renderTradeCard).join('') : '<p class="muted">No trades found.</p>';
   bindTradeCardActions(dom.tradeList);
 }
@@ -527,11 +554,14 @@ function renderTradeCard(trade) {
   const plClass = trade.plUsd > 0 ? 'positive' : trade.plUsd < 0 ? 'negative' : '';
   const tags = trade.tags?.length ? trade.tags.map((tag) => `<span class="tag">${tag}</span>`).join('') : '';
   const screenshots = trade.screenshots?.length
-    ? trade.screenshots.map((shot) => {
-        const url = URL.createObjectURL(shot.blob);
-        return `<img src="${url}" alt="Screenshot" />`;
-      }).join('')
+    ? trade.screenshots
+        .map((shot) => {
+          const url = URL.createObjectURL(shot.blob);
+          return `<img src="${url}" alt="Screenshot" />`;
+        })
+        .join('')
     : '<p class="muted">No screenshots</p>';
+
   return `
     <article class="trade-card" data-id="${trade.id}">
       <div class="trade-meta">
@@ -571,6 +601,7 @@ function bindTradeCardActions(container) {
       if (trade) loadTradeIntoForm(trade);
     });
   });
+
   container.querySelectorAll('[data-action="delete"]').forEach((button) => {
     button.addEventListener('click', async () => {
       const card = button.closest('[data-id]');
@@ -589,6 +620,7 @@ function bindTradeCardActions(container) {
 
 function loadTradeIntoForm(trade) {
   state.editingTradeId = trade.id;
+
   dom.tradeForm.instrument.value = trade.instrument || '';
   dom.tradeForm.marketType.value = trade.marketType || 'Forex';
   dom.tradeForm.direction.value = trade.direction || 'Buy';
@@ -609,6 +641,7 @@ function loadTradeIntoForm(trade) {
   dom.tradeForm.status.value = trade.status || 'Open';
   dom.tradeForm.closeDateTime.value = trade.closeDateTime ? trade.closeDateTime.slice(0, 16) : '';
   dom.tradeForm.notes.value = trade.notes || '';
+
   renderConfluenceChecklist(trade.confluenceChecked || []);
   dom.screenshotPreview.innerHTML = trade.screenshots?.length
     ? trade.screenshots.map((shot) => `<img src="${URL.createObjectURL(shot.blob)}" alt="Screenshot" />`).join('')
@@ -626,6 +659,7 @@ function formatPl(value) {
 function renderAnalytics() {
   const filtered = filterTrades(state.trades);
   const stats = computeStats(filtered);
+
   dom.analyticsStats.innerHTML = [
     { label: 'Total Trades', value: stats.total },
     { label: 'Wins', value: stats.wins },
@@ -649,6 +683,7 @@ function renderAnalytics() {
     cumulative += entry.pl;
     equityCurve.push(cumulative);
   });
+
   drawLineChart(dom.equityChart, equityCurve, '#1aa3ff');
   drawBarChart(dom.dailyChart, dailyValues.map((entry) => entry.pl), '#1aa3ff');
 
@@ -686,26 +721,24 @@ function filterTrades(trades) {
 }
 
 function updateJournalStats() {
-  dom.journalNameInput.value = state.currentJournal.name;
+  dom.journalNameInput.value = state.currentJournal?.name || '';
 }
 
 async function renameJournal() {
+  if (!state.currentJournal) return;
   const name = dom.journalNameInput.value.trim();
   if (!name) return;
   state.currentJournal.name = name;
   await updateJournal(state.currentJournal);
-  loadJournalsFromDB();
-
-  loadJournalsFromDB();
-
-  renderJournalList();
-
+  await renderJournalList();
 }
 
 async function handleDeleteJournal() {
+  if (!state.currentJournal) return;
   if (!confirm('Delete this journal and all its trades?')) return;
   await deleteJournal(state.currentJournal.id);
-  showJournalSelector();
+  await renderJournalList();
+  await showJournalSelector();
 }
 
 function renderTemplateEditor() {
@@ -788,12 +821,14 @@ async function handleAddInstrumentValue() {
   const value = Number(dom.instrumentValue.value);
   const type = dom.instrumentType.value;
   if (!instrument || !value) return;
+
   const existing = state.currentJournal.instrumentValues.find((item) => item.instrument === instrument && item.type === type);
   if (existing) {
     existing.value = value;
   } else {
     state.currentJournal.instrumentValues.push({ instrument, value, type });
   }
+
   await updateJournal(state.currentJournal);
   dom.instrumentName.value = '';
   dom.instrumentValue.value = '';
@@ -833,10 +868,14 @@ async function exportJournalCsv() {
     'status',
     'confluenceScore',
   ];
-  const rows = state.trades.map((trade) => headers.map((header) => {
-    const value = trade[header] ?? '';
-    return `"${String(value).replace(/"/g, '""')}"`;
-  }).join(','));
+  const rows = state.trades.map((trade) =>
+    headers
+      .map((header) => {
+        const value = trade[header] ?? '';
+        return `"${String(value).replace(/"/g, '""')}"`
+      })
+      .join(',')
+  );
   const csv = [headers.join(','), ...rows].join('\n');
   downloadFile(csv, `${state.currentJournal.name}-trades.csv`, 'text/csv');
 }
@@ -844,41 +883,44 @@ async function exportJournalCsv() {
 async function importJournalJson(event) {
   const file = event.target.files[0];
   if (!file) return;
+
   const text = await file.text();
   const payload = JSON.parse(text);
-  const overwrite = confirm('Import as new journal? Cancel to overwrite current journal.');
-  if (overwrite) {
+  const importAsNew = confirm('Import as new journal? Cancel to overwrite current journal.');
+
+  if (importAsNew) {
     const newJournal = { ...payload.journal, id: crypto.randomUUID(), name: `${payload.journal.name} (Imported)` };
     await addJournal(newJournal);
+
     for (const trade of payload.trades) {
       trade.id = crypto.randomUUID();
       trade.journalId = newJournal.id;
       await addTrade(trade);
     }
+
     newJournal.tradeCount = payload.trades.length;
     await updateJournal(newJournal);
     await saveConfluenceTemplate(newJournal.id, payload.template || []);
   } else {
     state.currentJournal = { ...state.currentJournal, ...payload.journal };
     await updateJournal(state.currentJournal);
+
     await Promise.all(state.trades.map((trade) => deleteTrade(trade.id)));
     for (const trade of payload.trades) {
       trade.journalId = state.currentJournal.id;
       await updateTrade(trade);
     }
+
     await saveConfluenceTemplate(state.currentJournal.id, payload.template || []);
     state.trades = await getTradesByJournal(state.currentJournal.id);
     state.currentJournal.tradeCount = state.trades.length;
     await updateJournal(state.currentJournal);
     await loadTemplate();
   }
+
   event.target.value = '';
-  await loadJournalsFromDB();
-
-  await loadJournalsFromDB();
-
   await renderJournalList();
-
+  await showJournalSelector();
 }
 
 function downloadFile(content, filename, type) {
